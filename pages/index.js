@@ -1,6 +1,7 @@
 import React from "react";
 
 //components
+
 import MeetupList from "../components/meetups/MeetupList";
 
 const DUMMY_MEETUPS = [
