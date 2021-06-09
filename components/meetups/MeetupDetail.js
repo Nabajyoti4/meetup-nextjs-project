@@ -2,7 +2,7 @@ import React from "react";
 import classes from "./MeetupDetail.module.css";
 
 function MeetupDetail(props) {
-  const { title, image, description, address } = props.meetup;
+  const { title, image, description, address } = props;
   return (
     <section className={classes.detail}>
       <img src={image} alt={title}></img>

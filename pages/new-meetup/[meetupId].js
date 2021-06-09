@@ -1,9 +1,16 @@
 import React from "react";
 import MeetupDetail from "../../components/meetups/MeetupDetail";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 function MeetUpDetailPage(props) {
-  return <MeetupDetail meetup={props.meetup}></MeetupDetail>;
+  return (
+    <MeetupDetail
+      title={props.meetupData.title}
+      image={props.meetupData.image}
+      description={props.meetupData.description}
+      address={props.meetupData.address}
+    ></MeetupDetail>
+  );
 }
 
 export async function getStaticPaths() {
@@ -28,15 +35,31 @@ export async function getStaticPaths() {
 }
 export async function getStaticProps(context) {
   const meetupId = context.params.meetupId;
+
+  console.log(meetupId);
+
+  const client = await MongoClient.connect(
+    "mongodb+srv://meetup:meetup-admin@cluster0.fl5sw.mongodb.net/meetups?retryWrites=true&w=majority",
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  );
+
+  const db = client.db();
+
+  const meetupsCollection = db.collection("meetups");
+
+  const meetup = await meetupsCollection.findOne({ _id: ObjectId(meetupId) });
+
+  console.log(meetup);
+
+  client.close();
   return {
     props: {
-      meetup: {
-        id: meetupId,
-        title: "A first meetup",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW3oHkiYs4q99R3jbur1cNe0oWW4Tz-BrfEw&usqp=CAU",
-        address: "France , New york city",
-        description: "Description of meetup",
+      meetupData: {
+        id: meetup._id.toString(),
+        title: meetup.title,
+        description: meetup.description,
+        address: meetup.address,
+        image: meetup.image,
       },
     },
     revalidate: 1,
