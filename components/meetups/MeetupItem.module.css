@@ -12,7 +12,8 @@
 
 .image img {
   width: 100%;
-  object-fit: cover;
+  height: min-content;
+  object-fit: fill;
 }
 
 .content {
